@@ -7,8 +7,6 @@ public class Main {
     // You can use print statements as follows for debugging, they'll be visible when running tests.
     System.out.println("Logs from your program will appear here!");
 
-    // Uncomment this block to pass the first stage
-
      try {
        ServerSocket serverSocket = new ServerSocket(4221);
 
@@ -18,6 +16,7 @@ public class Main {
 
        serverSocket.accept(); // Wait for connection from client.
        System.out.println("accepted new connection");
+       System.out.println("HTTP/1.1 200 OK\r\n\r\n");
      } catch (IOException e) {
        System.out.println("IOException: " + e.getMessage());
      }
