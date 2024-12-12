@@ -3,22 +3,19 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 public class Main {
-  public static void main(String[] args) {
-    // You can use print statements as follows for debugging, they'll be visible when running tests.
-    System.out.println("Logs from your program will appear here!");
+    public static void main(String[] args) {
+        try {
+            ServerSocket serverSocket = new ServerSocket(4221);
+            // Since the tester restarts your program quite often, setting SO_REUSEADDR
+            // ensures that we don't run into 'Address already in use' errors
 
-     try {
-       ServerSocket serverSocket = new ServerSocket(4221);
+            serverSocket.setReuseAddress(true);
+            Socket clientSocket = serverSocket.accept(); // Wait for connection from client.
 
-       // Since the tester restarts your program quite often, setting SO_REUSEADDR
-       // ensures that we don't run into 'Address already in use' errors
-       serverSocket.setReuseAddress(true);
-
-       serverSocket.accept(); // Wait for connection from client.
-       System.out.println("accepted new connection");
-       System.out.println("HTTP/1.1 200 OK\r\n\r\n");
-     } catch (IOException e) {
-       System.out.println("IOException: " + e.getMessage());
-     }
-  }
+            System.out.println("accepted new connection");
+            clientSocket.getOutputStream().write("HTTP/1.1 200 OK\\r\\n\\r\\n".getBytes());
+        } catch (IOException e) {
+            System.out.println("IOException: " + e.getMessage());
+        }
+    }
 }
