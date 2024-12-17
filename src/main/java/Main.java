@@ -44,14 +44,14 @@ public class Main {
                 System.out.println("string portion: " + responseString); // debugging
 
                 OutputStream out = clientSocket.getOutputStream();
-                if (path.startsWith("/")) {
-                    out.write("HTTP/1.1 200 OK\r\n\r\n".getBytes());
-                } else if (path.startsWith("/echo")) {
+                if (path.startsWith("/echo")) {
                     out.write(("HTTP/1.1 200 OK\r\n"
                             + "Content-Type: text/plain\r\n"
                             + "Content-Length: " + responseString.length()
                             + "\r\n\r\n"
                             + responseString).getBytes());
+                } else if (path.startsWith("/")) {
+                    out.write("HTTP/1.1 200 OK\r\n\r\n".getBytes());
                 } else {
                     out.write("HTTP/1.1 404 Not Found\r\n\r\n".getBytes());
                 }
