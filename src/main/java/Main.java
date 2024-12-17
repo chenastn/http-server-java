@@ -12,54 +12,55 @@ public class Main {
         try {
             ServerSocket serverSocket = new ServerSocket(4221);
             serverSocket.setReuseAddress(true);
-
             while(true) {
                 Socket clientSocket = serverSocket.accept();
                 System.out.println("accepted new connection"); // debugging
-
-                BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-                String request = in.readLine();
-                System.out.println("request: " + request); // debugging
-
-                String path = "";
-                String responsePath = "";
-                String responseString = "";
-                if (request != null) {
-                    String[] requestParts = request.split(" ");
-                    String[] intermediateResponseParts = request.split(" ");
-                    String[] responseParts = intermediateResponseParts[1].split("/");
-
-                    if (requestParts.length > 1) {
-                        path = requestParts[1];
-                    }
-                    if (responseParts.length > 1) {
-                        responsePath = responseParts[1];
-                    }
-                    if (responseParts.length > 2) {
-                        responseString = responseParts[2];
-                    }
+                try {
+                    handleRequest(clientSocket);
+                } finally {
+                    clientSocket.close();
                 }
-                System.out.println("path: " + path); // debugging
-                System.out.println("path portion: " + responsePath); // debugging
-                System.out.println("string portion: " + responseString); // debugging
-
-                OutputStream out = clientSocket.getOutputStream();
-                if (path.startsWith("/echo")) {
-                    out.write(("HTTP/1.1 200 OK\r\n"
-                            + "Content-Type: text/plain\r\n"
-                            + "Content-Length: " + responseString.length()
-                            + "\r\n\r\n"
-                            + responseString).getBytes());
-                } else if (path.startsWith("/")) {
-                    out.write("HTTP/1.1 200 OK\r\n\r\n".getBytes());
-                } else {
-                    out.write("HTTP/1.1 404 Not Found\r\n\r\n".getBytes());
-                }
-
-                clientSocket.close();
             }
         } catch (IOException e) {
             System.out.println("IOException: " + e.getMessage());
+        }
+    }
+
+    private static void handleRequest(Socket clientSocket) throws IOException {
+        BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+        String request = in.readLine();
+        System.out.println("request: " + request); // debugging
+
+        if (request == null) {
+            sendResponse(clientSocket, null);
+            return;
+        }
+
+        String[] requestParts = request.split(" ");
+        if (requestParts.length < 2) {
+            sendResponse(clientSocket, null);
+            return;
+        }
+
+        String path = requestParts[1];
+        if (path.startsWith("/echo/")) {
+            String echoContent = path.substring(6);
+            sendResponse(clientSocket, echoContent);
+        } else {
+            sendResponse(clientSocket, null);
+        }
+    }
+
+    private static void sendResponse(Socket clientSocket, String body) throws IOException {
+        OutputStream out = clientSocket.getOutputStream();
+        if (body != null && !body.isEmpty()) {
+            out.write(("HTTP/1.1 200 OK\r\n"
+                    + "Content-Type: text/plain\r\n"
+                    + "Content-Length: " + body.length()
+                    + "\r\n\r\n"
+                    + body).getBytes());
+        } else {
+            out.write("HTTP/1.1 404 Not Found\r\n\r\n".getBytes());
         }
     }
 }
