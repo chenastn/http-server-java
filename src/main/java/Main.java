@@ -46,6 +46,8 @@ public class Main {
         if (path.startsWith("/echo/")) {
             String echoContent = path.substring(6);
             sendResponse(clientSocket, echoContent);
+        } else if (path.equals("/")) {
+            sendResponse(clientSocket, path);
         } else {
             sendResponse(clientSocket, null);
         }
@@ -53,7 +55,9 @@ public class Main {
 
     private static void sendResponse(Socket clientSocket, String body) throws IOException {
         OutputStream out = clientSocket.getOutputStream();
-        if (body != null && !body.isEmpty()) {
+        if (body != null && body.equals("/")) {
+            out.write("HTTP/1.1 200 OK\r\n\r\n".getBytes());
+        } else if (body != null && !body.isEmpty()) {
             out.write(("HTTP/1.1 200 OK\r\n"
                     + "Content-Type: text/plain\r\n"
                     + "Content-Length: " + body.length()
