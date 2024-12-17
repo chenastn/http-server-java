@@ -47,7 +47,7 @@ public class Main {
 
                 OutputStream out = clientSocket.getOutputStream();
                 if (VALID_PATHS.contains(responsePath)) {
-                    out.write(("HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: 3\r\n\r\n" + responseString).getBytes());
+                    out.write(("HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: " + responseString.length() + "\r\n\r\n" + responseString).getBytes());
                 } else {
                     out.write("HTTP/1.1 404 Not Found\r\n\r\n".getBytes());
                 }
