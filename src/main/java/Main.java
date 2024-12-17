@@ -9,17 +9,13 @@ import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
-        final List<String> VALID_PATHS = new ArrayList<>();
-        VALID_PATHS.add("/");
-        VALID_PATHS.add("echo");
-
         try {
             ServerSocket serverSocket = new ServerSocket(4221);
             serverSocket.setReuseAddress(true);
 
             while(true) {
                 Socket clientSocket = serverSocket.accept();
-                System.out.println("accepted new connection");
+                System.out.println("accepted new connection"); // debugging
 
                 BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
                 String request = in.readLine();
@@ -36,8 +32,10 @@ public class Main {
                     if (requestParts.length > 1) {
                         path = requestParts[1];
                     }
-                    if (responseParts.length > 1) {
+                    if (intermediateResponseParts.length > 1) {
                         responsePath = responseParts[1];
+                    }
+                    if (responseParts.length > 2) {
                         responseString = responseParts[2];
                     }
                 }
@@ -46,8 +44,14 @@ public class Main {
                 System.out.println("string portion: " + responseString); // debugging
 
                 OutputStream out = clientSocket.getOutputStream();
-                if (VALID_PATHS.contains(responsePath)) {
-                    out.write(("HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: " + responseString.length() + "\r\n\r\n" + responseString).getBytes());
+                if (path.startsWith("/")) {
+                    out.write("HTTP/1.1 200 OK\r\n\r\n".getBytes());
+                } else if (path.startsWith("/echo")) {
+                    out.write(("HTTP/1.1 200 OK\r\n"
+                            + "Content-Type: text/plain\r\n"
+                            + "Content-Length: " + responseString.length()
+                            + "\r\n\r\n"
+                            + responseString).getBytes());
                 } else {
                     out.write("HTTP/1.1 404 Not Found\r\n\r\n".getBytes());
                 }
