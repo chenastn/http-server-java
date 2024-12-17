@@ -11,7 +11,7 @@ public class Main {
     public static void main(String[] args) {
         final List<String> VALID_PATHS = new ArrayList<>();
         VALID_PATHS.add("/");
-        VALID_PATHS.add("/echo/abc");
+        VALID_PATHS.add("echo");
 
         try {
             ServerSocket serverSocket = new ServerSocket(4221);
@@ -26,6 +26,7 @@ public class Main {
                 System.out.println("request: " + request); // debugging
 
                 String path = "";
+                String responsePath = "";
                 String responseString = "";
                 if (request != null) {
                     String[] requestParts = request.split(" ");
@@ -36,14 +37,16 @@ public class Main {
                         path = requestParts[1];
                     }
                     if (responseParts.length > 1) {
+                        responsePath = responseParts[1];
                         responseString = responseParts[2];
                     }
                 }
                 System.out.println("path: " + path); // debugging
+                System.out.println("path portion: " + responsePath); // debugging
                 System.out.println("string portion: " + responseString); // debugging
 
                 OutputStream out = clientSocket.getOutputStream();
-                if (VALID_PATHS.contains(path)) {
+                if (VALID_PATHS.contains(responsePath)) {
                     out.write(("HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: 3\r\n\r\n" + responseString).getBytes());
                 } else {
                     out.write("HTTP/1.1 404 Not Found\r\n\r\n".getBytes());
