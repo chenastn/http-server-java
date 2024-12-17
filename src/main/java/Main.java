@@ -32,7 +32,7 @@ public class Main {
                     if (requestParts.length > 1) {
                         path = requestParts[1];
                     }
-                    if (intermediateResponseParts.length > 1) {
+                    if (responseParts.length > 1) {
                         responsePath = responseParts[1];
                     }
                     if (responseParts.length > 2) {
