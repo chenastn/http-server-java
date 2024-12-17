@@ -50,7 +50,7 @@ public class Main {
                             + "Content-Length: " + responseString.length()
                             + "\r\n\r\n"
                             + responseString).getBytes());
-                } else if (path.startsWith("/ ")) {
+                } else if (path.startsWith("/")) {
                     out.write("HTTP/1.1 200 OK\r\n\r\n".getBytes());
                 } else {
                     out.write("HTTP/1.1 404 Not Found\r\n\r\n".getBytes());
