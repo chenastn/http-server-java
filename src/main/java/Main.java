@@ -4,8 +4,6 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
@@ -43,9 +41,12 @@ public class Main {
         }
 
         String path = requestParts[1];
-        if (path.startsWith("/echo/")) {
-            String echoContent = path.substring(6);
+        System.out.println("path: " + path); // debugging
+        if (path.startsWith("/echo")) {
+            String echoContent = path.substring(6); // omits the first six characters
             sendResponse(clientSocket, echoContent);
+        } else if (path.startsWith("/user-agent")) {
+            sendResponse(clientSocket, getUserAgent(in));
         } else if (path.equals("/")) {
             sendResponse(clientSocket, path);
         } else {
@@ -65,6 +66,22 @@ public class Main {
                     + body).getBytes());
         } else {
             out.write("HTTP/1.1 404 Not Found\r\n\r\n".getBytes());
+        }
+    }
+
+    private static String getUserAgent(BufferedReader in) throws IOException {
+        String header;
+
+        while (true) {
+            header = in.readLine();
+
+            if (header != null && !header.isEmpty()) {
+                System.out.println("header = " + header); // debugging
+                if (header.startsWith("User-Agent:")) {
+                    System.out.println("userAgent: " + header.substring(11).trim()); // debugging
+                    return header.substring(11).trim();
+                }
+            }
         }
     }
 }
