@@ -10,21 +10,20 @@ public class Main {
         try {
             ServerSocket serverSocket = new ServerSocket(4221);
             serverSocket.setReuseAddress(true);
+
             while(true) {
                 Socket clientSocket = serverSocket.accept();
                 System.out.println("accepted new connection"); // debugging
-                try {
-                    handleRequest(clientSocket);
-                } finally {
-                    clientSocket.close();
-                }
+
+                ClientHandler clientHandler = new ClientHandler(clientSocket);
+                new Thread(clientHandler).start();
             }
         } catch (IOException e) {
             System.out.println("IOException: " + e.getMessage());
         }
     }
 
-    private static void handleRequest(Socket clientSocket) throws IOException {
+    public static void handleRequest(Socket clientSocket) throws IOException {
         BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
         String request = in.readLine();
         System.out.println("request: " + request); // debugging
