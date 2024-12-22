@@ -8,10 +8,18 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 public class Main {
+    private static String directory;
     public static void main(String[] args) {
         try {
             ServerSocket serverSocket = new ServerSocket(4221);
             serverSocket.setReuseAddress(true);
+
+            for (int i = 0; i < args.length; i++) { // file parsing
+                if (args[i].equals("--directory")) {
+                    directory = args[i + 1];
+                    break;
+                }
+            }
 
             while(true) {
                 Socket clientSocket = serverSocket.accept();
@@ -105,7 +113,6 @@ public class Main {
 
     private static String getFilePath(String requestPath) {
         String fileName = requestPath.substring(7);
-        System.out.println("file path: " + "/files/" + fileName);
-        return "/files/" + fileName;
+        return directory + "/" + fileName;
     }
 }
