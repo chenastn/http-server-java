@@ -105,6 +105,7 @@ public class Main {
 
     private static String getFilePath(String requestPath) {
         String fileName = requestPath.substring(7);
-        return "/tmp/" + fileName;
+        System.out.println("file path: " + "/files/" + fileName);
+        return "/files/" + fileName;
     }
 }
