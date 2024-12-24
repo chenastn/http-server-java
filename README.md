@@ -361,3 +361,5 @@ A lightweight HTTP server implementation in Java supporting basic HTTP/1.1 proto
    - [Example of a multithreaded server using executors](https://stackoverflow.com/questions/26986783/way-to-stop-java-util-concurrent-executor-task)
    - [Server Testing CLI: oha](https://github.com/hatoo/oha)
    - [Turning Our Single-Threaded Server into a Multithreaded Server in Rust](https://doc.rust-lang.org/stable/book/ch20-02-multithreaded.html#turning-our-single-threaded-server-into-a-multithreaded-server)
+### December 20, 2024
+- Implemented the `/files/{filename}` endpoint, which returns a requested file to the client.
