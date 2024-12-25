@@ -19,7 +19,7 @@ public class Main {
             ServerSocket serverSocket = new ServerSocket(4221);
             serverSocket.setReuseAddress(true);
 
-            for (int i = 0; i < args.length; i++) { // directory parsing
+            for (int i = 0; i < args.length; i++) {
                 if (args[i].equals("--directory")) {
                     directory = args[i + 1];
                     break;
@@ -78,7 +78,7 @@ public class Main {
                     String filePath = getFilePath(path);
                     String postData = getPostData(in);
                     try {
-                        setFileContent(filePath, postData);  // Use your existing setFileContent method
+                        setFileContent(filePath, postData);
                         sendPOSTResponse(clientSocket, "201 Created");
                     } catch (IOException e) {
                         sendPOSTResponse(clientSocket, "404 Not Found");
@@ -182,15 +182,15 @@ public class Main {
         return directory + "/" + fileName;
     }
 
-    private static boolean createFile(String pathString) {
-        try {
-            String filePath = getFilePath(pathString);
-            Path path = Paths.get(filePath);
-            Files.createFile(path);
-            return true;
-        } catch (IOException e) {
-            System.err.println("Error creating file: " + e.getMessage());
-            return false;
-        }
-    }
+//    private static boolean createFile(String pathString) {
+//        try {
+//            String filePath = getFilePath(pathString);
+//            Path path = Paths.get(filePath);
+//            Files.createFile(path);
+//            return true;
+//        } catch (IOException e) {
+//            System.err.println("Error creating file: " + e.getMessage());
+//            return false;
+//        }
+//    }
 }
