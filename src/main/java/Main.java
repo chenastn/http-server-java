@@ -132,7 +132,7 @@ public class Main {
         }
     }
 
-    private static String getAcceptType(String path) throws IOException {
+    private static String getAcceptType(String path) {
         if (path.startsWith("/echo") || path.startsWith("/user-agent") || path.equals("/")) {
             return "text/plain";
         } else if (path.startsWith("/files")) {
